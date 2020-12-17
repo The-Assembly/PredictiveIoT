@@ -1,0 +1,161 @@
+--------------------------------------------------------------------------------
+-- An API for interacting with the Lua Script Resource
+--------------------------------------------------------------------------------
+
+module "tw_script"
+
+--------------------------------------------------------------------------------
+-- Add a new script and execute it.
+--
+-- @param name The name of the script.
+-- @param filename The file name of the script.
+-- @param content The content of the script, if not in a file.
+-- @param max_run_time How long a script should run for, in seconds, if not 
+--                     persisted. Defaults to 20 sec.
+-- @param props A Lua table of p_data properties to be passed to the new script
+--              Optional.
+--
+-- @returns Two values:
+--    <ul>
+--      <li>An error string</li>
+--      <li>0 on success or HTTP error code on failure</li>
+--    </ul>
+--
+function addScript(name, filename, content, max_run_time, props)
+
+--------------------------------------------------------------------------------
+-- Stop a running script and remove it from the config file.
+--
+-- @param name The name of the script to remove.
+--
+-- @returns Two values:
+--    <ul>
+--      <li>An error string</li>
+--      <li>0 on success or HTTP error code on failure</li>
+--    </ul>
+--
+function removeScript(name)
+
+--------------------------------------------------------------------------------
+-- Update a running script with a new implementation from an existing file
+-- or the given content.
+--
+-- @param name The name of the script.
+-- @param filename The file name of the script. Optional if content is provided.
+-- @param content The content of the script, if not in a file.
+-- @param max_run_time How long a script should run for, in seconds, if not 
+--                     persisted. Defaults to 20 sec.
+-- @param props A Lua table of p_data properties to be passed to the new script.
+--              Optional.
+--
+-- @returns Two values:
+--    <ul>
+--      <li>An error string</li>
+--      <li>0 on success or HTTP error code on failure</li>
+--    </ul>
+--
+function updateScript(name, filename, content, max_run_time, props)
+
+--------------------------------------------------------------------------------
+-- Get a list of configured scripts and their status.
+--
+-- @returns A table of script information containing the name of each script
+--          and its status.
+--
+function getScriptList()
+
+--------------------------------------------------------------------------------
+-- Get the status of a specific script.
+-- 
+-- @param name The name of the script.
+--
+-- @return An error string or the status
+--
+function getStatus(name)
+
+--------------------------------------------------------------------------------
+-- Get the result of a completed script.
+--
+-- @param name The name of the script.
+--
+-- @return An error string or the result.
+--
+function getResult(name)
+
+--------------------------------------------------------------------------------
+-- Get the filename of a specific script.
+--
+-- @param name The name of the script.
+--
+-- @return An error string or the file name.
+--
+function getFilename(name)
+
+--------------------------------------------------------------------------------
+-- Get a list of the persisted propertiies & values from the script.
+-- 
+-- @param name The name of the script.
+-- 
+-- @return A table containing the properties and their values.
+--
+function getProperties(name)
+
+--------------------------------------------------------------------------------
+-- Get the current value of a property from a script.
+--
+-- @param name The name of the script.
+-- @param prop The name of the property.
+--
+-- @result An error string or the result.
+--
+function getProperty(name, prop)
+
+--------------------------------------------------------------------------------
+-- Set the persisted properties both in the config file and the script itself.
+--
+-- @param name The name of the script.
+-- @param props A Lua table of properties to be passed to the script.
+--
+-- @return 0 on success or HTTP error code on failure.
+--
+function setProperties(name, props)
+
+--------------------------------------------------------------------------------
+-- Execute a script's registered HTTP handler using the specified request
+-- parameters.
+-- 
+-- @param name The name of the script.
+-- @param method The HTTP method to use.
+-- @param path The path to the callback (relative to /scripts/<name>). 
+--             Defaults to "/".
+-- @param headers A table of HTTP headers.
+-- @param query A table of query parameters.
+-- @param data A table of form parameters. If you need to pass in a JSON
+--             string, use the key 'content' to point to the JSON data.
+--
+-- @result Returns the following three values:
+--    <ul>
+--      <li>A number containing an HTTP status code. 200 on success.</li>
+--      <li>A string containing the response data.</li>
+--      <li>A table of response headers.</li>
+--    </ul>
+--
+function executeCallback(name, method, path, headers, query, data)
+
+--------------------------------------------------------------------------------
+-- Removes all completed, non-persisted, scripts.
+--
+-- @result An error string or the result.
+--
+function cleanupFinishedScripts()
+
+--------------------------------------------------------------------------------
+-- Load a script file.
+--
+-- @param name The name of the script
+-- @param fileName The file name of the script
+-- @param timeout The maximum amount of time (in seconds) to wait
+--                for the script to start (default = 0, wait indefinately)
+--
+-- @result true for success, false for failure
+--

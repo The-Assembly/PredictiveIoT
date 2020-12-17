@@ -1,0 +1,34 @@
+--------------------------------------------------------------------------------
+-- A Shape is a modular way to add a specific set of functionality to a 
+-- template. Each shape is a collection of services, properties, and tasks.
+-- When a shape is required within a template, its services, properties, and
+-- tasks are added to template.
+--
+-- This module is the base type for all Shapes in the framework.
+--------------------------------------------------------------------------------
+module "thingworx.shape"
+
+--------------------------------------------------------------------------------
+-- Converts a standard Lua module into a Shape. This method should be used 
+-- during the module initialization of any new Shape:
+-- <pre>module ("shapes.newshape", thingworx.shape.extend)</pre>
+--
+-- This will place the core Lua libraries, core Lua functions, all ThingWorx
+-- libraries, and common utlities into the new shape's scope.
+--
+-- It also adds the following variables into the shape's scope:
+-- <ul>
+--  <li>me: A reference to this shape.</li>
+--  <li>p_data: The table of configuration data linked to the Thing. This table
+--              can be populated with settings via the script resource's config
+--              file, or directly within a shape or template.</li>
+--  <li>name: The name of the current Thing.</li>
+--  <li>services: An empty table that can be populated with services specific to 
+--                the new shape.</li>
+--  <li>properties: An empty table that can be populated with properties specific to 
+--                  the new shape.</li>
+--  <li>tasks: An empty table that can be populated with tasks specific to 
+--             the new shape.</li>
+-- </ul>
+--
+function extend(m)

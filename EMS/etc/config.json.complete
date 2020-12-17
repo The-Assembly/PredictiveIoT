@@ -1,0 +1,138 @@
+{
+
+"ws_servers": [{
+		"host": "localhost",
+		"port": 80
+	}
+],
+
+"resource": "/Thingworx/WS",
+
+"appKey": "0d3bea79-eb49-4519-9049-6b50d240ee53",
+
+"logger": {
+	"level": "WARN",
+	"audit_target": "file:// or http:// ",
+	"publish_directory": "/_tw_logs/",
+	"publish_level": "WARN",
+	"max_file_storage": 2000000,
+	"auto_flush": true,
+	"flush_chunk_size": 16384,
+	"buffer_size": 4096
+},
+
+"http_server": {
+	"host": "localhost",
+	"port": 8000,
+	"ssl": true,
+	"certificate": "/path/to/certificate/file",
+	"private_key": "/path/to/private/key",
+	"passphrase": "password",
+	"authenticate": true,
+	"user": "johnsmith",
+	"password": "password",
+	"content_read_timeout": 20000,
+	"ports_to_try": 10,
+	"max_clients": 15,
+	"enable_csrf_tokens" : true,
+	"csrf_token_rotation_period" : 10
+},
+
+"fips": {
+	"enabled": false
+},
+
+"ws_connection": {
+	"encryption": "ssl",
+	"verbose": false, 
+	"msg_timeout": 10000,
+	"ping_rate": 55000,
+	"pingpong_timeout": 10000,
+	"message_idle_time": 50000,
+	"max_msg_size": 1048576,
+	"message_chunk_size": 8192,
+	"max_messages": 500,
+	"connect_timeout": 10000,
+	"connect_retry_interval": 10000,
+	"max_threads": 4,
+	"max_connect_delay": 10000,
+	"socket_read_timeout": 0,
+	"frame_read_timeout": 10000,
+	"ssl_read_timeout": 500,
+	"connect_retries": -1,
+	"compression": true
+},
+
+"proxy": {
+	"host": "localhost",
+	"port": 3128,
+	"user": "username",
+	"password": "password"
+},
+
+"offline_msg_store": {
+	"enabled": true,
+	"directory": "/path/to/offline/message/store/directory",
+	"max_size": 65535
+},
+
+"certificates": {
+	"validate": true,
+	"allow_self_signed": false,
+	"disable_hostname_validation": false,
+	"cert_chain": "/path/to/ca_cert/file",
+	"client_cert": "/path/to/client/cert/file",
+	"key_file": "/path/to/key/file",
+	"key_passphrase": "passphrase",
+	"cipher_suite": "ALL:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!DSS:!RC4:!SEED:!ADH:!IDEA:!3DES:!SRP",
+	"http_client_ca_certs": "/path/to/ca_cert/file",
+	"validation_criteria": {
+		"Cert_Common_Name": "common name",
+		"Cert_Organization": "organization name",
+		"Cert_Organizational_Name": "organizational name",
+		"CA_Cert_Common_Name": "cert common name",
+		"CA_Cert_Organization": "cert organization",
+		"CA_Cert_Organizational_Name": "cert organizational name"
+	},
+	"fingerprint_whitelist" : [
+        "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+     	"3b3282b147ad8d91f79a5fd5fe5c8f3063bcfb27ed2c2a8fa94017f30f89138b"
+     ]
+},
+
+"auto_bind": [{
+		"name": "EdgeThing001",
+		"host": "localhost",
+		"port": 8001,
+		"path": "/",
+		"timeout": 30000,
+		"protocol": "http",
+		"user": "username",
+		"password": "password",
+		"accept": "application/json",
+		"gateway": false
+	}
+],
+
+"tunnel": {
+	"tick_resolution": 5
+},
+
+"file": {
+	"buffer_size": 1024000,
+	"max_file_size": 8000000000,
+	"virtual_dirs": [
+		{"tw": "c:\some\folder"},
+		{"other":"d:\another\folder"}
+	],
+	"idle_timeout": 12000,
+	"staging_dir": "\virtual_dir\some\path"
+},
+
+"duty_cycle": {
+	"connect_period": 60000,
+	"duty_cycle": 100,
+	"delay_duty_cycle": 60000
+}
+
+}

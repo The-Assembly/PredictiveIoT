@@ -1,0 +1,40 @@
+
+--------------------------------------------------------------------------------
+-- A collection of service functions.
+--------------------------------------------------------------------------------
+
+module "tw_service"
+
+--------------------------------------------------------------------------------
+-- Start a service (OS dependant)
+--
+-- @param name The service name.
+-- @param waitTime The amount of time in seconds to wait for the
+--                 service to start.  (Default = 0 which will
+--                 wait indefinitely.)
+-- @return A Lua true for success or false for failure.
+-- 
+function start(name, waitTime)
+
+--------------------------------------------------------------------------------
+-- Stop a service (OS dependant)
+--
+-- @param name The service name.
+-- @param waitTime The amount of time in seconds to wait for the
+--                 service to start.  (Default = 0 which will
+--                 wait indefinitely.)
+-- @return A Lua true for success or false for failure.
+-- 
+function stop(name, waitTime)
+
+--------------------------------------------------------------------------------
+-- Wait for a service to enter a specific state (OS dependant)
+--
+-- @param name The service name.
+-- @param state The state waiting for the service to enter.
+-- @param waitTime The amount of time in seconds to wait for the
+--                 service to enter the state. (default = 60 seconds)
+--                 Can enter zero to wait indefinitely.
+-- @return A Lua true for success or false for failure.
+-- 
+function waitForState(name, waitTime)

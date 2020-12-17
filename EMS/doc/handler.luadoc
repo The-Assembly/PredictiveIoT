@@ -1,0 +1,96 @@
+--------------------------------------------------------------------------------
+-- This module is the base type for all Handlers in the framework.
+-- A Handler is a modular way to implement the reading and writing of property
+-- values to different data sources. Each handler is required to implement a 
+-- read and write function to handle the reading and writing of property values.
+--
+-- <p>The read function must implement the following signature:</p>
+--
+-- <p><code>read(me, pt, headers, query)</code></p>
+--
+-- <ul>
+--  <li>me: A reference to the currently executing thing.</li>
+--  <li>pt: The property table. This is the full property table as defined in
+--          the thing's template file. The attributes defined in that table
+--          are all available for use, in addition to other fields as described
+--          below.</li>
+--  <li>headers: A table of the HTTP headers that accompanied the GET 
+--               request for this property.</li>
+--  <li>query: A table of the query parameters included in the URL of the GET
+--               request for this property.</li>
+-- </ul>
+--
+-- <p>
+-- Each property table also includes three important fields: <strong>name
+-- </strong>, <strong>value</strong>, <strong>time</strong>, and 
+-- <strong>quality</strong>. The name field contains the name of the property 
+-- being read. The <em>value, time</em>, and <em>quality</em> fields must be set 
+-- by your handler in order for the framework to return the correct value for the 
+-- property request. The <em>value</em> field should be set to whatever value is 
+-- determined by your handler to be the result of the read request. The 
+-- <em>time</em> field is set to the time that the value was determined, in 
+-- milliseconds since 01/01/0001. tw_utils.currentTime() can be used to set this 
+-- field to the current time. The <em>quality</em> field should be set to 'GOOD', 
+-- 'BAD', or 'UNKNOWN', depending on how certain you are of the quality of your 
+-- handler's result.
+-- </p>
+--
+-- <p>
+-- If you have not provided defaults for these values in your template file,
+-- then the fields will have the following values when read() is called for 
+-- the first time. pt.value will default to '0'. pt.time will default to the 
+-- start time of the thing. pt.quality will default to 'UNKNOWN'.
+-- </p>
+--
+-- <p>The write function must implement the following signature:</p>
+--
+-- <p><code>write(me, pt, headers, query, data)</code></p>
+--
+-- <ul>
+--  <li>me: A reference to the currently executing thing.</li>
+--  <li>pt: The property table. This is the full property table as defined in
+--          the thing's template file. The attributes defined in that table
+--          are all available for use, as well as the <em>name</em> field, 
+--          which contains the name of the property being set.
+--  <li>headers: A table of the HTTP headers that accompanied the PUT
+--               request for this property.</li>
+--  <li>query: A table of the query parameters included in the URL of the PUT
+--               request for this property.</li>
+--  <li>data: A table with the single field <strong>value</strong> which holds
+--            the new value for the property.
+-- </ul>
+--
+-- <p>
+-- The write function is responsible for extracting the data.value field and 
+-- using it to set the value of the underlying resource. Note that the write
+-- function <strong>should not</strong> set the pt.value, pt.time, or 
+-- pt.quality fields. This should only happen in the read function.
+-- </p>
+--------------------------------------------------------------------------------
+module "thingworx.handler"
+
+--------------------------------------------------------------------------------
+-- Converts a standard Lua module into a Handler. This method should be used 
+-- during the module initialization of any new Handler:
+-- <pre>module ("handlers.newhandler", thingworx.handler.extend)</pre>
+--
+-- This will place the core Lua libraries, core Lua functions, all ThingWorx
+-- libraries, and common utlities into the new Handler's scope.
+--
+-- It also adds the following variables into the handler's scope:
+-- <ul>
+--  <li>p_data: The table of configuration data linked to the Thing. This table
+--              can be populated with settings via the script resource's config
+--              file, or directly within a handler or template.</li>
+--  <li>name: The name of the current Thing.</li>
+--  <li>services: An empty table that can be populated with services specific to 
+--                the new handler.</li>
+--  <li>properties: An empty table that can be populated with properties specific to 
+--                  the new handler.</li>
+--  <li>tasks: An empty table that can be populated with tasks specific to 
+--             the new handler.</li>
+-- </ul>
+--
+-- @param m The module to be extended.
+--
+function extend(m)

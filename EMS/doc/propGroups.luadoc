@@ -1,0 +1,28 @@
+--------------------------------------------------------------------
+-- A package to handle property groups as they are requested
+-- via a callback from the Thingworx Script Resource
+--------------------------------------------------------------------
+
+module("propGroups")
+
+------------------------------------------------------------------
+-- A utility funtion for handling groups or property requests.
+-- Retrieves the current value of the parameters in the items group.
+-- @param access_func The function used to access value of the item
+-- @param items A table containing strings of the names of the items to 
+--              retrieve.  The table may contain funcntions in the form
+--              of sub-tables with the following format.
+--              <pre>{ f="calulate_pct", "cpu.0.utilization", 100, }</pre>
+--              where if is assumed to be a function in the p_data table
+--              and the other table elements are parameters to pass to
+--              the funciton.  Sring parameters are evaluated using the
+--              access function before beign passed to function "f".
+--       
+--               A complete input table may look something like the following:
+-- <pre>{ "memory.used", cpu_pct={ f="calulate_pct", "cpu.0.utilization", 100, }, disk_free="disk.0.free"}</pre>
+--
+-- @return A table with the results of calling access_func and evaluating
+--         any inline functions.  Input table indicies are preserved.
+--
+function getGroup(access_func, items)
+

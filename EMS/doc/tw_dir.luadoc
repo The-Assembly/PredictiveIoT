@@ -1,0 +1,277 @@
+
+--------------------------------------------------------------------------------
+-- Collection of functions to aid in interactions with the filesystem.
+--
+-- Many of these functions work with files or directories on the file system. 
+-- In many cases a standard lua table is used to hold information about a file
+-- or directory. The table is formatted as follows:
+--
+-- <pre>
+-- { size, lastModified, readOnly, isFile, isDir, md5 }
+-- </pre>
+--
+--------------------------------------------------------------------------------
+
+module "tw_dir"
+
+--------------------------------------------------------------------------------
+-- Returns the full path of the current directory that the script resource
+-- is executing in.
+-- 
+-- @return The full path of the current directory.
+--
+function pwd()
+
+--------------------------------------------------------------------------------
+-- Returns a table of file tables, representing the files in the specified
+-- directory.
+-- 
+-- @param dir The directory to list files for.
+-- @return A table of file tables. Raises an error if the directory is not
+--         found.
+--
+function listFiles(dir)
+
+--------------------------------------------------------------------------------
+-- Returns a table of subdirectories in the specified directory.
+-- 
+-- @param dir The directory to list.
+-- @return A table of directory tables. Raises an error if the directory is not
+--         found.
+-- 
+function listSubdirs()
+
+--------------------------------------------------------------------------------
+-- Returns a table containing information about the given file.
+-- 
+-- @param file The file to interrogate.
+-- @param hash Boolean indicating whether or not to calculate the hash for 
+--             the file. Optional.
+--
+-- @return A table containing information about the file, or an error if the
+--         file is not found.
+-- 
+function getFileInfo()
+
+--------------------------------------------------------------------------------
+-- Determine if a file/directory has changed.
+--
+-- @param file The name of the file or directory.
+-- @param info The last known file/dir info table.
+--
+-- @return The following values:
+--         <li>The current file info table</li>
+--         <li>A number indicating if the file has changed: 0 for no change,
+--             1 for changed, -1 for file not found.</li>
+--
+function fileChanged()
+
+--------------------------------------------------------------------------------
+-- Determine if a directory has changed, which means it contains a new file, 
+-- there was a file deleted, or a file was udated. Subdirectories are not 
+-- checked.
+--
+-- @param dir  The name of the directory to check.
+-- @param info The previous directory info table for the directory being checked.
+-- @param reportDeleted Boolean indicating whether deleted files are reported as
+--                      as a change. Optional. Defaults to false.
+--
+-- @return The following values:
+--          <li>True if dir has changed, false if it has not.</li>
+--          <li>Table containing the </li>
+--
+function directoryFilesChanged()
+
+--------------------------------------------------------------------------------
+-- Determine if the subdirecotires of a directory have changed, which means it 
+-- contains a new subdirectory, a subdirectory was deleted, or a subdirectory
+-- has been updated (contains a new file, or a file has been deleted).
+--
+-- @param dir  The name of the directory to check.
+-- @param info The previous directory info table for the directory being checked.
+-- @param reportDeleted Boolean indicating whether deleted subdirecotires  are 
+--                      reported as as a change. Optional. Defaults to false.
+--
+--
+function directorySubdirsChanged()
+
+--------------------------------------------------------------------------------
+-- Create a zip file from a list of files.
+--
+-- @param files A table of file info tables. The keys in this table are the 
+--              file names.
+-- @param rootdir A string containing the root directory of the files to be 
+--                compressed. File names are relative to this root and can have 
+--                a relative path prepended to them.  The relative path is 
+--                retained in the Zip archive.
+-- @param zipfile A string containing the name of the zip file to create. 
+--                Optional. Defaults to the name of the first file in the 
+--                table with '.zip' appended to it.
+--
+-- @returns The name of the output file, on success, or an empty
+--          string on failure.</li>
+--
+function compressFiles()
+
+--------------------------------------------------------------------------------
+-- Create a zip file from a directory.
+--
+-- @param dir The relative path of the directory to zip.
+-- @param rootdir A string containing the root directory of the directory to be 
+--                compressed. File names are relative to this root and can have 
+--                a relative path prepended to them.  The relative path is 
+--                retained in the Zip archive. Defaults to '/'.
+-- @param zipfile A string containing the name of the zip file to create. 
+--                Optional. Defaults to the name of the directory
+--                with '.zip' appended to it.
+--
+-- @returns The name of the output file, on success, or an empty
+--          string on failure.</li>
+--
+function compressDir()
+
+--------------------------------------------------------------------------------
+-- Create a zip file from a single file.
+--
+-- @param dir The relative path of the file to zip.
+-- @param rootdir A string containing the root directory of the file to be 
+--                compressed. The file name is relative to this root. The 
+--                relative path is retained in the Zip archive. Defaults to '/'.
+-- @param zipfile A string containing the name of the zip file to create. 
+--                Optional. Defaults to the name of the file
+--                with '.zip' appended to it.
+--
+-- @returns The name of the output file, on success, or an empty
+--          string on failure.</li>
+--
+function compressFile()
+
+--------------------------------------------------------------------------------
+-- Decompress a zip file.
+--
+-- @param file The absolute path of the file to decompress.
+-- @param dir  The absolute path of the directory to decompress to.
+--
+-- @returns True on success, nil on failure.
+--
+function decompress()
+
+--------------------------------------------------------------------------------
+-- Calculate the MD5 hash of a file.
+--
+-- @param Absolute path of the file to be hashed.
+-- @returns A string containing the MD5 hash of the file, or nil on failure.
+--
+function calculateMD5()
+
+--------------------------------------------------------------------------------
+-- Adjust a path string according to the host OS.
+--
+-- @param path The path to fix.
+-- @param trailer A boolean indicating whether or not to append a trailing 
+--                slash onto the resulting path.
+--
+-- @returns The adjusted path.
+--
+function fixPath()
+
+--------------------------------------------------------------------------------
+-- Adjust a path string to Unix style.
+--
+-- @param path The path to adjust.
+-- @param trailer A boolean indicating whether or not to append a trailing 
+--                slash onto the resulting path.
+--
+-- @returns The adjusted path.
+--
+function unixPath()
+
+--------------------------------------------------------------------------------
+-- Move a file to a new locaton. This method is meant to be portable across
+-- operating systems.
+--
+-- @param src  The name of the file to move.
+-- @param dest The destination location of the file. This path my specify a new
+--             file name if desired.
+--
+-- @return 0 on success, a platform specific error code on failure
+--
+function move(src, dest)
+
+--------------------------------------------------------------------------------
+-- Copy a file to a new locaton. This method is meant to be portable across
+-- operating systems.
+--
+-- @param src  The name of the file to copy.
+-- @param dest The destination location of the file. This path my specify a new
+--             file name if desired.
+--
+-- @return 0 on success, a platform specific error code on failure
+--
+function copy(src, dest)
+
+--------------------------------------------------------------------------------
+-- Create a new directory. This method will create parent directories as
+-- needed.
+--
+-- @param dir The name of the directory to create.
+--
+-- @return 0 on success, a platform specific error code on failure
+--
+function mkdir(dir)
+
+--------------------------------------------------------------------------------
+-- Delete a file or directory. This operation is permanent.
+--
+-- @param file The name of the file or directory to delete.
+-- @return 0 on success, a platform specific error code on failure
+--
+function remove(file)
+
+--------------------------------------------------------------------------------
+-- Determine if a given file or directory exists.
+--
+-- @param file The name of the directory to create.
+-- @return True if the file exists, false otherwise.
+--
+function exists(file)
+
+--------------------------------------------------------------------------------
+-- Determine if a given path resolves to a directory.
+--
+-- @param dir The path to check.
+-- @return True if dir exists and is a directory.
+--
+function isDir(dir)
+
+--------------------------------------------------------------------------------
+-- Determine if a given path resolves to a file.
+--
+-- @param file The path to check.
+-- @return True if file exists and is a file.
+--
+function isFile(file)
+
+--------------------------------------------------------------------------------
+-- Wait for a file to exist on the filesystem.
+--
+-- @param file The path to watch.
+-- @param timeout How long to wait, in ms, for the file to appear.
+-- @return True if file exists and is a file, within the timeout period.
+--
+function waitForFile(file, timeout)
+
+--------------------------------------------------------------------------------
+-- Monitor a file until it doesn't change for a given amount of time, then 
+-- return the file info table if the file still exists. This can be used to 
+-- ensure that a file isn't being modified prior to taking an action on it.
+--
+-- @param name The absolute location of the file. Required.
+-- @param wait How oftern to check the file for modifications. Required.
+-- @param info The last file info table for the watched file. Optional. This 
+--             method will do an initial read if this parameter is nil.
+--
+-- @return The file's info table, or nil if the file does not exist
+--
+function dwell(name, wait, info)
+

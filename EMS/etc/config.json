@@ -1,0 +1,33 @@
+{
+	"ws_servers":	[{
+			"host":	"{SERVER HOSTID}.devportal.ptc.io",
+			"port":	443
+		}],
+	"appkey":	"{APPKEY}",
+	"logger":	{
+		"level":	"INFO",
+		"publish_directory":	"C:\\EMS\\logs",
+		"publish_level":	"INFO",
+		"max_file_storage":	2000000,
+		"auto_flush":	true
+	},
+	"http_server":	{
+		"ssl":	false,
+		"authenticate":	false
+	},
+	"ws_connection":	{
+		"encryption":	"ssl"
+	},
+	"certificates":	{
+		"validate":	false,
+		"disable_hostname_validation":	true
+	},
+	"file":	{
+		"buffer_size":	8192,
+		"max_file_size":	8000000000,
+		"virtual_dirs":	[{
+				"other":	"C:\\EMS\\other"
+			}],
+		"staging_dir":	"C:\\EMS\\staging"
+	}
+}

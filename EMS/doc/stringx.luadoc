@@ -1,0 +1,28 @@
+--------------------------------------------------------------------------------
+-- This module extends the core Lua string library with some commonly used 
+-- utility functions.
+--
+module("stringx")
+
+------------------------------------------------------------------
+-- Parses a delimiter separated string into tokens and returns 
+-- them in a table.
+--
+-- @param s The string to parse.
+-- @param delimiter The delimiter to split the string on.
+--
+-- @return A table with the individual string components and the 
+--         number of elelments in the table.
+------------------------------------------------------------------
+function stringToTable(s, delimiter)
+
+-----------------------------------------------------------------
+-- @class function
+-- @name split
+-- @description An alias for stringToTable that is added to the 
+--              core string library.
+-- @param s The string to parse.
+-- @param delimiter The delimiter to split the string on.
+--
+split = stringToTable
+string.split = stringToTable

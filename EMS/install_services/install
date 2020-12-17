@@ -1,0 +1,195 @@
+#!/bin/sh
+
+#setting run defaults
+WSEMS_DAEMON="tw_microServerd"
+LSR_DAEMON="tw_luaScriptResourced"
+EMS_RUN_USER="root"
+INSTALL_AS_INIT=1
+
+die()
+{
+        local _ret=$2
+        test -n "$_ret" || _ret=1
+        test "$_PRINT_HELP" = yes && print_help >&2
+        echo "$1" >&2
+        exit ${_ret}
+}
+
+print_help ()
+{
+        echo "Thingworx EMS Install Script for Initd and SystemD all arguments are optional"
+        printf 'Usage: %s [-w|--wsems <arg>] [-l|--lsr <arg>] [-u|--user <arg>] [-h|--help]\n' "$0"
+        printf "\t%s\n" "-w,--wsems: name of ems executable if not using default configuration (default: '"tw_microServerd"')"
+        printf "\t%s\n" "-l,--lsr: name of lua resource executable if not using default configuration (default: '"tw_luaScriptResourced"')"
+        printf "\t%s\n" "-u,--user: specify the user the script should run as; only for systemd installation(default: '"root"')"
+        printf "\t%s\n" "-h,--help: Prints help"
+}
+ 
+# Make sure we are running as root
+if ! [ `id -u` = 0 ]; then 
+ echo "ERROR: This script must be run as root"
+ exit 1;
+fi
+
+while test $# -gt 0
+do
+        _key="$1"
+        case "$_key" in
+                -w|--wsems|--wsems=*)
+                        _val="${_key##--wsems=}"
+                        if test "$_val" = "$_key"
+                        then
+                                test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+                                _val="$2"
+                                shift
+                        fi
+                        WSEMS_DAEMON="$_val"
+                        ;;
+                -l|--lsr|--lsr=*)
+                        _val="${_key##--lsr=}"
+                        if test "$_val" = "$_key"
+                        then
+                                test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+                                _val="$2"
+                                shift
+                        fi
+                        LSR_DAEMON="$_val"
+                        ;;
+                -u|--user|--user=*)
+                        _val="${_key##--user=}"
+                        if test "$_val" = "$_key"
+                        then
+                                test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+                                _val="$2"
+                                shift
+                        fi
+                        EMS_RUN_USER="$_val"
+                        ;;
+                -h|--help)
+                        print_help
+                        exit 0
+                        ;;
+                *)
+                        _PRINT_HELP=yes die "FATAL ERROR: Got an unexpected argument '$1'" 1
+                        ;;
+        esac
+        shift
+done
+
+
+# Make sure we are in the proper directory
+if ! [ -e "../wsems" ]; then 
+ echo "ERROR: ../wsems does not exist"
+ exit 1;
+fi
+
+if ! [ -e "../luaScriptResource" ]; then 
+ echo "ERROR: ../luaScriptResource does not exist"
+ exit 1;
+fi
+
+echo "Installing $WSEMS_DAEMON and $LSR_DAEMON"
+
+#Check for systemd
+
+if [[ -L "/sbin/init" ]]; then
+ SYSTEMD_CHECK=1
+ INSTALL_AS_INIT=0
+ echo "Installing for SystemD Daemon"
+else
+ INITD_CHECK=1
+ INSTALL_AS_INIT=1
+ echo "Installing for sysvinit"
+fi
+
+if [ -z "$EMS_RUN_USER" ]; then
+ EMS_RUN_USER=root
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+EMS_INSTALL_DIR="$(dirname "$DIR")"
+
+if [ "$INSTALL_AS_INIT" = "0" ]; then
+
+ while read line
+ do 
+   eval echo "$line"
+ done < "./ems.service" >> ${WSEMS_DAEMON}.service
+
+ while read line
+ do
+   eval echo "$line"
+ done < "./lua.service" >> ${LSR_DAEMON}.service
+
+ if [ -f "${EMS_INSTALL_DIR}/wsems" ] && [ ! -x "${EMS_INSTALL_DIR}/wsems" ]; then
+  chmod +x "${EMS_INSTALL_DIR}/wsems"
+ fi
+
+ if [ -f "${EMS_INSTALL_DIR}/luaScriptResource" ] && [ ! -x "${EMS_INSTALL_DIR}/luaScriptResource" ]; then
+  chmod +x "${EMS_INSTALL_DIR}/luaScriptResource"
+ fi
+ 
+ CURRENT_OWNER=`ls -ld ${EMS_INSTALL_DIR} | awk '{print $3}'`
+ 
+ if [ ${EMS_RUN_USER} != "root" ] && [ ${CURRENT_OWNER} != ${EMS_RUN_USER} ]; then
+  sudo chown -R ${EMS_INSTALL_DIR}
+ fi
+ 
+ sudo mv ${DIR}/${WSEMS_DAEMON}.service /etc/systemd/system/${WSEMS_DAEMON}.service 
+ sudo mv ${DIR}/${LSR_DAEMON}.service /etc/systemd/system/${LSR_DAEMON}.service
+ sudo systemctl enable ${WSEMS_DAEMON}.service && echo ${WSEMS_DAEMON} enabled || echo service failed to install
+ sudo systemctl enable ${LSR_DAEMON}.service && echo ${LSR_DAEMON} enabled || echo service failed to install
+
+ sudo systemctl start ${WSEMS_DAEMON}.service && echo ${WSEMS_DAEMON} started || echo ${WSEMS_DAEMON} service failed to start
+ sudo systemctl start ${LSR_DAEMON}.service && echo ${LSR_DAEMON} started || echo ${LSR_DAEMON} service failed to start
+
+ INSTALL_SYSD_SUCCESS=1
+
+fi
+
+
+if [ "$INSTALL_SYSD_SUCCESS" = "1" ]; then
+ echo $'EMS Systemd service has installed successfully and is running\nTo start and stop the ems service run "sudo systemctl [start/stop] tw_microServerd.service"\nTo start and stop the lua resource service run "sudo systemctl [start/stop] tw_luaScriptResourced.service"'
+ exit 0
+elif [ "$INSTALL_SYSD_SUCCESS" != "1" ] && [ "$INSTALL_AS_INIT" != "1" ]; then
+ echo "EMS Systemd service install failed please check your settings"
+ exit 1
+fi
+
+if [ "$INSTALL_AS_INIT" = "1" ]; then
+# Check for some odd distros that put init.d in rc.d
+ INIT_D=/etc/init.d
+ if ! [ -e "/etc/init.d" ]; then 
+  INIT_D=/etc/rc.d/init.d
+ fi
+
+ echo Path to init.d = $INIT_D
+
+# Installs ThingWorx daemons
+ echo Current Directory: ${DIR}
+
+ echo EMS Directory: ${EMS_INSTALL_DIR}
+
+ echo LSR Directory: ${EMS_INSTALL_DIR}
+ 
+# update the daemon scripts with the 
+# current directory and copy to etc/init.d
+ sed -e 's:___EMS_INSTALL_DIR___:'$EMS_INSTALL_DIR':g' < ./tw_microServerd > $INIT_D/$WSEMS_DAEMON
+ sed -e 's:___LSR_INSTALL_DIR___:'$EMS_INSTALL_DIR':g' < ./tw_luaScriptResourced > $INIT_D/$LSR_DAEMON
+
+# Make everything executable
+ chmod 755 ${EMS_INSTALL_DIR}/wsems
+ chmod 755 ${EMS_INSTALL_DIR}/luaScriptResource
+ chmod 755 $INIT_D/$WSEMS_DAEMON
+ chmod 755 $INIT_D/$LSR_DAEMON
+ echo Installing Daemons
+ if [ -e "/usr/sbin/update-rc.d" ]; then 
+  update-rc.d $WSEMS_DAEMON defaults 90
+  update-rc.d $LSR_DAEMON defaults 90
+ else if [ -e "/sbin/chkconfig" ]; then
+  chkconfig --add $WSEMS_DAEMON 
+  chkconfig --add $LSR_DAEMON 
+  fi
+ fi
+ echo "EMS service has installed succesfully"
+fi

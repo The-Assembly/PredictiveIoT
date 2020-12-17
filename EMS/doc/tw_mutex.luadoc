@@ -1,0 +1,26 @@
+
+--------------------------------------------------------------------------------
+-- This module provides access to the global mutex of the executing script.
+-- Typically, this lock is used to protect table iterations that may occur
+-- at the same time as a read/write. A common example would be accessing a 
+-- table in a script's main loop, while writing entries to it from a registered
+-- HTTP callback function. In this case, both the loop iterating over the 
+-- table, and the insert calls, would need to be protected by calls to 
+-- lock/unlock.
+--------------------------------------------------------------------------------
+
+module "tw_mutex"
+
+--------------------------------------------------------------------------------
+-- Lock the global mutex for the executing script. Note that if you lock the
+-- main loop of the script, you will be unable to unlock in, except for from
+-- within a registered HTTP callback handler.
+-- 
+function lock()
+
+--------------------------------------------------------------------------------
+-- Free the global mutex for the executing script.
+--
+function unlock()
+
+

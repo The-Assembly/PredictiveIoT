@@ -1,0 +1,123 @@
+-------------------------------------------------------------------------------
+-- Logging
+-------------------------------------------------------------------------------
+
+--
+-- Set the log level for the script resource.
+-- Available levels are FORCE, ERROR, WARN, INFO, DEBUG, and TRACE.
+-- Default value is INFO. When running as a service it is important 
+-- to set this to ERROR, WARN, or INFO.
+--
+scripts.log_level = "INFO"
+scripts.log_audit_target = "file://" or "http://"
+scripts.log_publish_directory = "/_tw_logs/"
+scripts.log_publish_level = "INFO"
+scripts.log_max_file_storage = "2000000"
+scripts.log_auto_flush = "true"
+scripts.log_flush_chunk_size = "16384"
+scripts.log_buffer_size = "4096"
+
+--
+-- FIPS Mode
+--
+scripts.fips_enabled = false
+
+--
+-- Connection parameters
+--
+scripts.rap_host = "EMS IP Address"
+scripts.rap_port = "EMS Port"
+scripts.rap_ssl = true
+scripts.rap_userid = "EMS HTTP Server User ID"
+scripts.rap_password = "password"
+scripts.rap_server_authenticate = true
+scripts.rap_cert_file = "Path to CA cert file."
+scripts.rap_deny_selfsigned = true
+scripts.rap_validate = true
+
+--
+-- HTTP Server Configuration
+--
+scripts.script_resource_host = "localhost"
+scripts.script_resource_port = "8001"
+scripts.script_resource_ssl = "true"
+scripts.script_resource_certificate_chain = "/path/to/lsr_http_server_certificate_chain/file"
+scripts.script_resource_private_key = "/path/to/private/key"
+scripts.script_resource_passphrase = "password"
+scripts.script_resource_authenticate = "true"
+scripts.script_resource_userid = "johnsmith"
+scripts.script_resource_password = "password"
+scripts.script_resource_enable_csrf_tokens = true
+scripts.script_resource_csrf_token_rotation_period = 10
+scripts.script_resource_enable_rest_services = false
+
+---
+--- Fingerprint Whitelist Configuration (Optional)
+---
+--- Provides an additional TLS verification option to restrict communication to a
+--- minimal set of trusted servers.  If not configured, Server Certificate Validation will be used.
+---
+--- Should contain a comma separated list of trusted Server Certificate Fingerprints.
+--- Fingerprints are the sha256 hash of the trusted Server Certificates.
+---
+--- TLS and certificate validation must be enabled to use this feature
+scripts.fingerprint_whitelist = "ce0f6c28b5869ff166714da5fe08554c70c731a335ff9702e38b00f81ad348c6"
+
+-------------------------------------------------------------------------------
+-- Edge Thing Configuration
+-------------------------------------------------------------------------------
+
+--
+-- Here we configure an Edge Thing to run in the scripting environment.
+-- The 'file' and 'template' settings are required for all Edge Things.
+-- Other parameters can be specified to change various behaviors:
+--
+--  * scanRate: Controls how frequently, in milliseconds, properties are 
+--    evaluated and possibly pushed to the server. Milliseconds. Defaults to 
+--    60000 ms.
+--  * taskRate: How frequently the tasks specified in the Thing's template
+--    should be executed. Defaults to 15000 ms.
+--  * scanRateResolution: How long the main thread of execution for this Thing
+--    pauses between iterations. Each iteration checks the scan and task rates
+--    to determine if properties should be evaluated or tasks should be 
+--    executed.  Must be less than the scan and task rates. Defaults to 500 ms.
+--  * register: Set to false if you do not want this Edge Thing to register 
+--    with the EMS. Defaults to true. In most cases this should be true.
+--  * keepAliveRate: How frequently the Thing should renew its registration 
+--    with the MicroServer. If the MicroServer is restarted this value controls
+--    the max amount of time that may pass before the Thing is re-registered.
+--    It also controls how frequently the EMS will perform a keepalive check
+--    on the script resource. If it finds that the script resource is not
+--    available the registered thing will be unbound and appear offline at
+--    the platform. Defaults to 60000 ms.
+--  * requestTimeout: The timeout used for HTTP requests from the EMS to the
+--    script resource.
+--  * maxConcurrentPropertyUpdates: The max number of properties that will be 
+--    included in a single property update call to the server. Defaults to 100.
+--    This can be decreased if the overall size of the batch property pushes 
+--    is larger than the EMS supports.
+--  * getPropertySubscriptionsOnReconnect: If the Thing is not able to connect
+--    to the MicroServer, on the next successful connection it will re-request 
+--    its property subscription information if this setting is set to true. 
+--    Useful if the script resource is running on a separate machine than the 
+--    MicroServer.
+--  * identifier: Register with the EMS and Platform using this identifier.
+--  * useShapes: Turn on/off the use of DataShapes for property definitions.
+--    Defaults to true.
+--
+scripts.EdgeThing = {
+    file = "thing.lua",
+    template = "example",
+}
+
+-------------------------------------------------------------------------------
+-- Example integration script
+-------------------------------------------------------------------------------
+
+--
+-- See etc/custom/scripts/sample.lua for implementation details.
+--
+
+scripts.sample = {
+  file = "sample.lua"
+}

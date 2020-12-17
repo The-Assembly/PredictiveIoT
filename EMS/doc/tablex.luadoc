@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+------------------------------------------------------------------
+-- toContentTypeString
+-- serializes a table/value in the requested contentType (text/plain, text/html, text/xml, text/csv)
+--
+-- Inputs - the item to formatted
+--        - the desired contentType
+--        - the type of the leaf of this table
+--        - a prefix to prepend to the key name (defaults to "")
+--        - query - the query string table.  Some formatting may
+--             have additional parameters (e.g. headers, or delimiter)
+--
+-- Returns - the formatted string
+------------------------------------------------------------------
+function table.toContentTypeString(t, contentType, query, prefix, link_root)
+
+------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Ordered table iterator, where f is the ordering function.  Default is ascending.
+---------------------------------------------------------------------------------
+function orderedPairs(t, f)
+
+------------------------------------------------------------------
+-- fromCsv
+-- Converts a CSV string to a table of tables.
+-- Each row of the csv is converted to a table.
+--
+-- Inputs -  csv - a csv formatted string
+--           useName - a number indicating which
+--                     element to use a a name for
+--                     the table entry.  Defaults to nil
+--                     meaning the returned table is numrically
+--                     indexed
+--			 headerRow - if true, the first row is used as the
+--                       names for the entries in the row tables
+-- Returns - a table of tables, defaulting to both being numerically indexed
+------------------------------------------------------------------
+function table.fromCsv(csv, useName, headerRow)

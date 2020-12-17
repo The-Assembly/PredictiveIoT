@@ -1,0 +1,62 @@
+[
+  {
+    "fieldName": "identifier",
+    "dataType": "STRING",
+    "opType": "INFORMATIONAL"
+  },
+  {
+    "fieldName": "failure",
+    "dataType": "BOOLEAN",
+    "opType": "BOOLEAN"
+  },
+  {
+    "fieldName": "s1_fb1",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  },
+  {
+    "fieldName": "s1_fb2",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  },
+  {
+    "fieldName": "s1_fb3",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  },
+  {
+    "fieldName": "s1_fb4",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  },
+  {
+    "fieldName": "s1_fb5",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  },
+  {
+    "fieldName": "s2_fb1",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  },
+  {
+    "fieldName": "s2_fb2",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  },
+  {
+    "fieldName": "s2_fb3",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  },
+  {
+    "fieldName": "s2_fb4",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  },
+  {
+    "fieldName": "s2_fb5",
+    "dataType": "DOUBLE",
+    "opType": "CONTINUOUS"
+  }
+]

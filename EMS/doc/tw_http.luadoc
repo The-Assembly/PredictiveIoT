@@ -1,0 +1,96 @@
+
+--------------------------------------------------------------------------------
+-- Collection of methods for executing HTTP requests and for registering 
+-- functions to act as handlers for incoming HTTP requests.
+--------------------------------------------------------------------------------
+module "tw_http"
+
+--------------------------------------------------------------------------------
+-- Execute a HTTP GET on the given host, port, and path.
+-- 
+-- @param host The host to send the request to.
+-- @param port The port to send the request to.
+-- @param path The URL path of the request.
+-- @param headers A Lua table of HTTP headers to include in the request.
+-- @param query A Lua table containing the URL query parameters for the request.
+-- 
+-- @return The following values:
+--         <ul>
+--          <li>The response data</li>
+--          <li>HTTP response code</li>
+--          <li>Lua table of HTTP response headers</li>
+--         </ul>
+--
+function get(host, port, path, headers, query)
+
+--------------------------------------------------------------------------------
+-- Execute a HTTP POST on the given host, port, and path.
+-- 
+-- @param host The host to send the request to.
+-- @param port The port to send the request to.
+-- @param path The URL path of the request.
+-- @param data A Lua table containing form data, or a string of post data.
+-- @param headers A Lua table of HTTP headers to include in the request.
+-- 
+-- @return The following values:
+--         <ul>
+--          <li>The response data</li>
+--          <li>HTTP response code</li>
+--          <li>Lua table of HTTP response headers</li>
+--         </ul>
+--
+function post(host, port, path, data, headers)
+
+--------------------------------------------------------------------------------
+-- Execute a HTTP PUT on the given host, port, and path.
+-- 
+-- @param host The host to send the request to.
+-- @param port The port to send the request to.
+-- @param path The URL path of the request.
+-- @param data A Lua table containing form data, or a string of post data.
+-- @param headers A Lua table of HTTP headers to include in the request.
+-- 
+-- @return The following values:
+--         <ul>
+--          <li>The response data</li>
+--          <li>HTTP response code</li>
+--          <li>Lua table of HTTP response headers</li>
+--         </ul>
+--
+function put(host, port, path, data, headers)
+
+--------------------------------------------------------------------------------
+-- Execute a HTTP DELETE on the given host, port, and path.
+-- 
+-- @param host The host to send the request to.
+-- @param port The port to send the request to.
+-- @param path The URL path of the request.
+-- @param headers A Lua table of HTTP headers to include in the request.
+-- 
+-- @return The following values:
+--         <ul>
+--          <li>The response data</li>
+--          <li>HTTP response code</li>
+--          <li>Lua table of HTTP response headers</li>
+--         </ul>
+--
+function delete(host, port, path, headers, query)
+
+--------------------------------------------------------------------------------
+-- Register a global function as a handler for incoming HTTP requests targeted
+-- at a given path.
+--
+-- @param The path to link the handler function to.
+-- @param The name of the function that will handle the requests. This 
+--        parameter must be a string that contains the name of a function 
+--        in the global scope.
+--
+-- Callback functions <strong>must</strong> have the following signature:
+-- <pre>function foo(method, path, headers, query, data)</pre>
+-- and return either:
+-- <ol>
+--  <li>status code (number), response body (string)</li>
+--  <li>status code (number), response headers (table), response body (string)</li>
+-- </ol>
+--
+function registerCallback(path, function)

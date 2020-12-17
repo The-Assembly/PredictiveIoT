@@ -1,0 +1,110 @@
+-- Modbus interface library
+--
+-- Developed by ThingWorx
+-- (c)2012 ThingWorx
+--
+------------------------------------------------------------------
+------------------------------------------------------------------
+--[[
+Each modbus read request should have a "formats" table associated
+with it.  The formats table is a numerically indexed table of tables.
+Each entry should have a format type identifer plus any extra data
+required to do the formatting.  Valid types and extra data are:
+
+Signed 16 bit number: Int16, scale(optional), offset(optional)
+Unsigned 16 bit number: Uint16, scale(optional), offset(optional)
+Signed 32 bit number: Int32, scale(optional), offset(optional)
+Unsigned 32 bit number: Uint32, scale(optional), offset(optional)
+Single precison Float: Float, scale(optional), offset(optional)
+Double precison Float: Double
+String:	String, max_length
+16 bit wide Masked Bitmap: MaskedBitmap16, mask_offset, mask_length
+32 bit wide Masked Bitmap: MaskedBitmap32, mask_offset, mask_length
+Linux Timestamp: Timestamp
+
+Note that all numeric values are retuned as Lua numbers, so with scaling &
+offset and Integer may not actually result in an Integer value.
+Timestamps consist of 6 contiguous 16 bit registers that contain, in order,
+Month, Day, Year, Hour, Minute, Milliseconds
+--]]
+------------------------------------------------------------------
+------------------------------------------------------------------
+
+module("modbus")
+
+------------------------------------------------------------------
+-- new
+-- Creates a new modbus object.
+-- Parameters:
+-- Returns:
+-- 		The newly created object
+------------------------------------------------------------------
+function modbus:new (config)
+
+------------------------------------------------------------------
+-- modbus:transmitFrame
+-- Create and send an modbus frame.
+-- Parameters:
+--      slave - destination slave
+--      func - the function to request
+--      register - the base register
+--      count - the number of registers or coils
+--      data - data to send
+-- Returns:
+-- 		response frame or nil plus error string upon failure
+------------------------------------------------------------------
+function modbus:transmitFrame(slave, func, register, count, data)
+
+------------------------------------------------------------------
+------------------------------------------------------------------
+-- modbus:rcvFrame(slaveId, code)
+-- Receive a response frame.
+-- Parameters:
+--      slaveId - use this to quickly terminate an out of sync frame
+--      code - expected code. use this to quickly terminate an out of sync frame
+-- Returns:
+--      table newframe (or nil if no frame is available or an error occured)
+--          newframe contains the following
+--      	slave - the slave that sent the response
+--			code - the function code
+--			data - the data in the response
+------------------------------------------------------------------
+function modbus:rcvFrame(slaveId, code)
+
+------------------------------------------------------------------
+------------------------------------------------------------------
+-- modbus:executeFunction
+-- Create and send a Modbus frame and wait for the response.
+-- Parameters:
+--      slave - destination slave
+--      func - the function to request
+--      register - the base register
+--      count - the number of registers or coils
+--      data - data to send
+--		formats - a table with the format specifiers of the requested registers
+-- Returns:
+-- 		Response data on success or nil plus error string upon failure
+--		If function is a write, a 0 is returned on success
+------------------------------------------------------------------
+function modbus:executeFunction(slave, func, register, count, data, formats)
+
+------------------------------------------------------------------
+------------------------------------------------------------------
+-- processResponse
+-- Processes a received frame.
+-- Parameters:
+--		code - the original funciton code
+--      pkt - a string containing the raw bytes in a response
+--		formats - a numerically indexed table representing how to format the response
+-- Returns:
+--      values - a numerically indexed table with the transformed values. Any valid
+--				values that are calulated before the erro will be returned in the table
+--		err - indication that an erro occured and this may be a partial table
+------------------------------------------------------------------
+function modbus:processResponse(code, pkt, formats)
+
+------------------------------------------------------------------
+function modbus:close()
+
+function modbus:set_read_timeout(x)
+

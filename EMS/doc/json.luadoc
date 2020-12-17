@@ -1,0 +1,78 @@
+-----------------------------------------------------------------------------
+-- JSON4Lua: JSON encoding / decoding support for the Lua language.
+-- json Module.
+-- Author: Craig Mason-Jones
+-- Homepage: http://json.luaforge.net/
+-- Version: 0.9.50
+-- This module is released under the MIT License (MIT).
+-- Please see LICENCE.txt for details.
+--
+-- USAGE:
+-- This module exposes two functions:
+--   encode(o)
+--     Returns the table / string / boolean / number / nil / json.null value as a JSON-encoded string.
+--   decode(json_string)
+--     Returns a Lua object populated with the data encoded in the JSON string json_string.
+--
+-- REQUIREMENTS:
+--   compat-5.1 if using Lua 5.0
+--
+-- CHANGELOG
+--	 0.9.50 Radical performance improvement on decode from Eike Decker. Many thanks!
+--	 0.9.40 Changed licence to MIT License (MIT)
+--   0.9.20 Introduction of local Lua functions for private functions (removed _ function prefix). 
+--          Fixed Lua 5.1 compatibility issues.
+--   		Introduced json.null to have null values in associative arrays.
+--          encode() performance improvement (more than 50%) through table.concat rather than ..
+--          Introduced decode ability to ignore /**/ comments in the JSON string.
+--   0.9.10 Fix to array encoding / decoding to correctly manage nil/null values in arrays.
+-----------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------
+-- Module declaration
+-----------------------------------------------------------------------------
+module("json")
+
+-----------------------------------------------------------------------------
+-- PUBLIC FUNCTIONS
+-----------------------------------------------------------------------------
+--- Encodes an arbitrary Lua object / variable.
+-- @param v The Lua object / variable to be JSON encoded.
+-- @return String containing the JSON encoding in internal Lua string format (i.e. not unicode)
+function encode (v)
+
+--- Decodes a JSON string and returns the decoded value as a Lua data structure / value.
+-- @param s The string to scan.
+-- @return Lua objectthat was scanned, as a Lua table / string / number / boolean or nil.
+function decode(s)
+
+--- The null function allows one to specify a null value in an associative array (which is otherwise
+-- discarded if you set the value with 'nil' in Lua. Simply set t = { first=json.null }
+function null()
+
+-----------------------------------------------------------------------------
+-- Internal, PRIVATE functions.
+-----------------------------------------------------------------------------
+
+--- Encodes a string to be JSON-compatible.
+-- This just involves back-quoting inverted commas, back-quotes and newlines, I think ;-)
+-- @param s The string to return as a JSON encoded (i.e. backquoted string)
+-- @return The string appropriately escaped.
+function encodeString(s)
+
+-- Determines whether the given Lua type is an array or a table / dictionary.
+-- We consider any table an array if it has indexes 1..n for its n items, and no
+-- other data in the table.
+-- I think this method is currently a little 'flaky', but can't think of a good way around it yet...
+-- @param t The table to evaluate as an array
+-- @return boolean, number True if the table can be represented as an array, false otherwise. If true,
+-- the second returned value is the maximum
+-- number of indexed elements in the array. 
+function isArray(t)
+
+--- Determines whether the given Lua object / table / variable can be JSON encoded. The only
+-- types that are JSON encodable are: string, boolean, number, nil, table and json.null.
+-- In this implementation, all other types are ignored.
+-- @param o The object to examine.
+-- @return boolean True if the object should be JSON encoded, false if it should be ignored.
+function isEncodable(o)

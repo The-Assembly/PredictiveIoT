@@ -1,0 +1,152 @@
+{
+
+// ThingWorx server to connect to.
+"ws_servers": [{
+		"host": "localhost",
+		"port": 80
+	}
+],
+
+// Resource used to connect to websocket. Default is "/Thingworx/WS".
+"resource": "/Thingworx/WS",
+
+// appKey must be specified.
+// appKey will be automatically encrypted
+"appKey": "0d3bea79-eb49-4519-9049-6b50d240ee53",
+
+// Logging configuration.
+"logger": {
+	"level": "AUDIT | ERROR | WARN | INFO | DEBUG | TRACE", // Default is WARN.
+	"audit_target": "file:// or http:// ",
+	"publish_directory": "/_tw_logs/",
+	"publish_level": "AUDIT | ERROR | WARN | INFO | DEBUG | TRACE", // Default is logger:level.
+	"max_file_storage": 2000000,
+	"auto_flush": true,
+	"flush_chunk_size": 16384,
+	"buffer_size": 4096
+},
+
+// HTTP Server configuration.
+"http_server": {
+	"host": "localhost", // Defaults to localhost - be careful, this likely means IPV6 localhost, not 127.0.0.1.
+	"port": 8000, // Number. Defaults to 8000.
+	"ssl": true, // Boolean. Enable SSL. Defaults to false.
+	"certificate": "/path/to/certificate/file", // String. Default is empty.
+	"private_key": "/path/to/private/key", //String. Default is empty.
+	"passphrase": "password", //String. Default is empty.  Will be automatically encrypted.
+	"authenticate": true, // Boolean. Enable Authentication. Defaults to false.
+	"user": "johnsmith", // User for HTTP server.
+	"password": "password", // Password for user. Will be automatically encrypted.
+	"content_read_timeout": 20000, // Setting to timeout when trying to read content from a POST or PUT.
+	"ports_to_try": 10, // Number. How many additional ports to try, incrementing by one, if the server cannot bind to the configured port. Defaults to 10.
+	"max_clients": 15, // Number. The maximum amount of concurrently connected clients. Defaults to 15.
+	"enable_csrf_tokens" : true, // Boolean.  Flag to enable or disable the use of CSRF tokens on the server.
+	"csrf_token_rotation_period" : 10 // Number. Use to set how often a CSRF token will rotate for a given session (in minutes).  Defaults to 10.
+},
+
+// FIPS configuration.
+"fips": {
+	"enabled": false // Boolean. Enable FIPS Mode // Default is false.
+},
+
+// Connection parameters.
+"ws_connection": {
+	"encryption": "none | ssl ", // Defaults to ssl.
+	"verbose": false, // Boolean. Put in extremely verbose logging mode. Default is false.
+	"msg_timeout": 10000, // Number. Time in msec to wait for a response to return from the server. Default = 10000.
+	"ping_rate": 55000, // Number. Rate in msec to send pings to the server the server. Default = 55000.
+	"pingpong_timeout": 10000, // Number in msec to wait for a pong after sending a ping. Timeout will initiate a reconnect. Default = 10000.
+	"message_idle_time": 50000, // Number in msec before multipart messages that never receive all of the expected number of chunks are timed out.  Default = 50000.
+	"max_msg_size": 1048576, // Number. Maximum size of a complete message (even if broken up into frames). Default = 1MB.
+	"message_chunk_size": 8192, // Number Maximum size of a message chunk. Large message must be broken up.
+	"max_messages": 500, // Number. Maximum number of requests that can be waiting for a response at any one time. Default = 500.
+	"connect_timeout": 10000, // Number. The maximum amount of time in msec to wait for a connect to the server to be established. Default = 10000.
+	"connect_retry_interval": 10000, // Number. The time in msec to wait in between connection attempts.
+	"max_threads": 4, // Number. The maximum number of incoming message handler threads to use. Default = 4. Maximum value = 50.
+	"max_connect_delay": 10000, // Number. The maximum amount of random delay time (in msec) before connecting. Default is 10000.
+	"socket_read_timeout": 0, // Maximum time in milliseconds to wait to receive data before timing out.  A value of '0' will poll the socket for available data without blocking.
+	"frame_read_timeout": 10000, // Maximum time in milliseconds to wait for a full SSL frame during a socket read operation.
+	"ssl_read_timeout": 500, // Maximum time in milliseconds to wait for a full SSL record during a socket read operation.
+	"connect_retries": -1, // Integer. The amount of times to retry connection on failure. -1 is equivalent to ‘retry forever’.
+	"compression": true // Boolean. Disable/Enable compression for websocket connections.
+},
+
+"proxy": {
+	"host": "localhost", // Host name or IP address of the proxy server used to connect to the ThingWorx server.
+	"port": 3128, // Port number used to communicate with the proxy server. Default value is 3128.
+	"user": "username", // Name of the user account that is used to connect with the proxy server.
+	"password": "password" // Password for user. Will be automatically encrypted
+},
+
+// Offline message storage configuration.
+"offline_msg_store": {
+	"enabled": true, // Boolean. Enable/disable offline message store. Default = true.
+	"directory": "/path/to/offline/message/store/directory", // String. Where to create the offline store files. Defaults to /opt/thingworx.
+	"max_size": 65535 // Number. Maximum size of the offline message store files. Default = 65535.
+},
+
+// Certificate settings.
+"certificates": {
+	"validate": true, // Boolean. Set to false to turn off certificate validation. Default = true.
+	"allow_self_signed": false, // Boolean. Allow self signed certificate. Default = false.
+	"disable_hostname_validation": false, // Boolean.  Disables hostname validation for Platform Connections.  Default = false. 
+	"cert_chain": "/path/to/ca_cert/file", // List of Certificate Authority certs used to validate the Platform Server certificate. Used if 'allow_self_signed' is false and 'validate' is true.
+	"client_cert": "/path/to/client/cert/file", // String. The X509 client certificate file.
+	"key_file": "/path/to/key/file", // String. A key file to load for the client cert. Supports .pem, .p8, and .p12 files.
+	"key_passphrase": "passphrase", // String passphrase for the key file. Will be automatically encrypted.
+	"cipher_suite": "ALL:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!DSS:!RC4:!SEED:!ADH:!IDEA:!3DES:!SRP", // String. Supports OpenSSL cipher list format (see https://www.openssl.org/docs/man1.0.2/apps/ciphers.html)
+	"http_client_ca_certs": "/path/to/ca_cert/file", // List of Certificate Authority certs used to validate Edge-To-Edge TLS Connections.  If left unset, `cert_chain` CA certificates will be used. Used if 'allow_self_signed' is false and 'validate' is true.
+	"validation_criteria": { // Object specifying which fields in the Platform Server certificate to validate, and the expected values.
+		"Cert_Common_Name": "common name", // subject common name.
+		"Cert_Organization": "organization name", // subject organization name.
+		"Cert_Organizational_Name": "organizational name", // subject organizational name.
+		"CA_Cert_Common_Name": "cert common name", // Issuer common name.
+		"CA_Cert_Organization": "cert organization", // Issuer organization name.
+		"CA_Cert_Organizational_Name": "cert organizational name" // Issuer organizational name.
+	},
+	"fingerprint_whitelist" : [ // Array of Certificate Fingerprints that will be used as additional validation criteria for Edge-side HTTP connections
+	    "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08", // A Fingerprint is the SHA256 Hash of a trusted Server's Certificate.
+	    "3b3282b147ad8d91f79a5fd5fe5c8f3063bcfb27ed2c2a8fa94017f30f89138b"
+	]
+},
+
+// Array with static definition of any Things/Resources that are always available on this channel.
+"auto_bind": [{
+		"name": "EdgeThing001", // String. Required name of the edge entity.
+		"host": "localhost", // String. Host name. Default is localhost. Be careful - IPV6 localhost will not connect to old script resource.
+		"port": 8001, // Number. Default = 8001. Must be positive a integer i.e. it can not be less than 1.
+		"path": "/", // String. Path to prepend to the path received in the server request.
+		"timeout": 30000, // Number. Time in msec to wait for a response from the target. Default = 30000.
+		"protocol": "http | https", // String. Protocol to use. Default to http.
+		"user": "username", // String. If username/pwd provided Basic Authentication will be used with the credentials.
+		"password": "password", // String. Password to use for authentication. Will be automatically encrypted
+		"accept": "application/json", // String. Future. Attempt to convert from JSON to this mime type and change the content-type header.
+		"gateway": true/false // Boolean. Use the name specified as a loopback for handling requests internally. Equivalent of LocalEms.
+	}
+],
+
+// Default tunnel settings.
+"tunnel": {
+	"tick_resolution": 5 // Time in ms to refresh the tunnel task thread. faster updates will lead to faster tunnels at the expense of CPU, Default 5ms.
+},
+
+// File transfer settings. All of these may be overridden by the server when a tunnel is initialized.
+"file": {
+	"buffer_size": 1024000, // Number. Size of the buffer to use. Can be overridden by server. Default 1024000 Bytes (1MB).
+	"max_file_size": 8000000000, // Number. Maximum file size to transfer Can be overridden by server. Default 8GB.
+	"virtual_dirs": [ // Array of virtual directories. Virtual directories are used when browsing and sending files to the server.
+		{"tw": "c:\some\folder"}, // all paths of files to be sent should be relative to a virtual directory.
+		{"other":"d:\another\folder"} // Default is one virtual directory and is the directory the twems executable is in.
+	],
+	"idle_timeout": 12000, // default idle file transfer timeout in milliseconds.this must be larger than the frame_read_timeout The true default (if unset) is 1.2X the frame_read_timeout.
+	"staging_dir": "\virtual_dir\some\path" // Directory to use as a staging directory for files transferred to the device.
+},
+
+// EMS Duty Cycle Configuration Parameters
+"duty_cycle": {
+	"connect_period": 60000, // Number. Rate in msec used to duty cycle control the connection. Default = 60000.
+	"duty_cycle": 100, // Number. Duty cycle of connection in percent. 100 = AlwaysOn. 0 = AlwaysOn. Default = 100. Maximum value = 100.
+	"delay_duty_cycle": 60000 // The time interval (in milliseconds) for which the duty cycle should not be entered, after receiving a message from the platform. Default 60000.
+}
+
+}

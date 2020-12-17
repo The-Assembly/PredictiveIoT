@@ -1,0 +1,190 @@
+--------------------------------------------------------------------------------
+-- An API to access properties, services, and event dispatching on the
+-- ThingWorx server. This functionality is accessed by making the appropriate
+-- calls to the script resource's associated remote application proxy.
+--------------------------------------------------------------------------------
+
+module "thingworx.server"
+
+--------------------------------------------------------------------------------
+-- Make a HTTP Get request against a path on the EMS.
+--
+-- @param path The path of the request.
+--
+-- @return Status code, followed by a response.
+--
+function get(path)
+
+--------------------------------------------------------------------------------
+-- Make a HTTP Put request against a path on the EMS.
+--
+-- @param path The path of the request.
+-- @param data Request data.
+-- @param headers Request headers.
+--
+-- @return Status code, followed by a response.
+--
+function put(path, data, headers)
+
+--------------------------------------------------------------------------------
+-- Make a HTTP Post request against a path on the EMS.
+--
+-- @param path The path of the request.
+-- @param data Request data.
+-- @param headers Request headers.
+--
+-- @return Status code, followed by a response.
+--
+function post(path, data, headers)
+
+--------------------------------------------------------------------------------
+-- Make a HTTP Delete request against a path on the EMS.
+--
+-- @param path The path of the request.
+--
+-- @return Status code, followed by a response.
+--
+function delete(path)
+
+--------------------------------------------------------------------------------
+-- Calls a service on a given Thing.
+--
+-- @param service The name of the service to call.
+-- @param data A Lua table containing the input parameters to the service. If
+--             the service doesn not have any input parameters this parameter
+--             may be nil.
+-- @param thing The name of the Thing to execute the service on. If this
+--              parameter is nil then the name of the calling Thing will be
+--              used (this name is pulled from p_data.name).
+--
+-- @return The following two values:
+--      <ul>
+--        <li>code: The HTTP status code from the service call</li>
+--        <li>resp: A string containing the response data. In the case
+--                  of success this string will be a JSON object and can be
+--                  passed to json.decode() in order to create a Lua table.</li>
+--      </ul>
+--
+function invoke(service, data, thing)
+
+--------------------------------------------------------------------------------
+-- Gets a property from a Thing.
+--
+-- @param property The name of the property to retreive. This must be the name
+--                 of the property at the server.
+-- @param thing The name of the Thing to execute the property request on. If
+--              this parameter is nil then the name of the calling Thing will
+--              be used (this name is pulled from p_data.name).
+--
+-- @return The following two values:
+--      <ul>
+--        <li>code: The HTTP status code from the service call</li>
+--        <li>resp: A string containing the response data. In the case
+--                    of success this string will be a JSON object containing
+--                    the property value and can be passed to json.decode()
+--                    in order to create a Lua table.
+--      </ul>
+--
+function getProperty(property, thing)
+
+--------------------------------------------------------------------------------
+-- Sets a property on a Thing. If a property name and a data table is provided,
+-- then this function will route the property set directly to the indicated
+-- thing and <strong>not</strong> use the Channel infrastructure. In most cases
+-- it is preferable to supply a property table as the first parameter and allow
+-- the framework to use the Channel infrastructure.
+--
+-- @param property The name of the property to set. This must be the name
+--                 of the property at the server. - OR -
+--                 The property table representing the property. If a table is
+--                 used then the data and thing parameters will be ignored.
+-- @param data A Lua table containing the new property value. The key in the table
+--             should be the name of the property, or the string 'value'. The
+-- @param thing The name of the Thing to execute property set on. If this
+--              parameter is nil then the name of the calling Thing will be
+--              used (this name is pulled from p_data.name).
+--
+-- @return The following two values:
+--      <ul>
+--        <li>code: The HTTP status code from the service call</li>
+--        <li>resp: A string containing the response data. In the case
+--                  of success this can be ignored.</li>
+--      </ul>
+--
+function setProperty(property, data, thing)
+
+--------------------------------------------------------------------------------
+-- Sets serveral properties on a Thing.
+--
+-- @param properties A table containing the properties to set
+-- @param thing The name of the EdgeThing that is sending the property update.
+--              If this parameter is nil then the name of the calling Thing
+--              will be used (this name is pulled from p_data.name).
+--
+-- @return The following two values:
+--      <ul>
+--        <li>code: The HTTP status code from the service call</li>
+--        <li>resp: A string containing the response data. In the case
+--                    of success this can be ignored.</li>
+--      </ul>
+--
+function setProperties(properties, thing)
+
+-- -----------------------------------------------------------------------------
+-- Private helper function that sets a property on a Thing using a property
+-- table as its parameter. Developers should use the standard setProperty
+-- method, which forwards calls to this method based on the type of the
+-- provided input param.
+--
+-- @param property The property table
+-- @param thing The name of the Thing to execute property set on. If this
+--              parameter is nil then the name of the calling Thing will be
+--              used (this name is pulled from p_data.name).
+--
+-- @return The following two values:
+--      <ul>
+--        <li>code: The HTTP status code from the service call</li>
+--        <li>resp: A string containing the response data. In the case
+--                  of success this can be ignored.</li>
+--      </ul>
+--
+-- @see setProperty
+--
+function _setProperty(property, thing)
+
+--------------------------------------------------------------------------------
+-- Fires an event on the server. The event is routed through the Channel, so
+-- that the correct Thing on the server triggers the event.
+--
+-- @param event The name of the event to fire.
+-- @param data A Lua table containing the event data.
+-- @param thingName The name of the Thing to fire the event on behalf of. If this
+--                  parameter is nil then the name of the calling Thing will be
+--                  used (this name is pulled from p_data.name).
+--
+-- @return The following two values:
+--      <ul>
+--        <li>code: The HTTP status code from the service call</li>
+--        <li>resp: A string containing the response data. In the case
+--                  of success this can be ignored.
+--      </ul>
+--
+function fireEvent(event, data, thingName)
+
+--------------------------------------------------------------------------------
+-- Calls a local service on the EMS.
+--
+-- @param service The name of the service to call.
+-- @param data A Lua table containing the input parameters to the service. If
+--             the service doesn not have any input parameters this parameter
+--             may be nil.
+--
+-- @return The following two values:
+--      <ul>
+--        <li>code: The HTTP status code from the service call</li>
+--        <li>resp: A string containing the response data. In the case
+--                  of success this string will be a JSON object and can be
+--                  passed to json.decode() in order to create a Lua table.
+--      </ul>
+--
+function invokeLocalEms(service, data)

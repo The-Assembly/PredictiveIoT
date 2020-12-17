@@ -1,0 +1,359 @@
+
+--------------------------------------------------------------------------------
+-- A collection of utility functions.
+--------------------------------------------------------------------------------
+
+module "tw_utils"
+
+--------------------------------------------------------------------------------
+-- Convert a datetime, in number of milliseconds since 1/1/0001 to a Lua
+-- time. This function adjust for the unix epoch.
+--
+-- @param datetime A number of milliseconds since 1/1/0001.
+--
+-- @return A Lua time value.
+-- 
+function datetimeToLuaTime(datetime)
+
+--------------------------------------------------------------------------------
+-- Convert a datetime, in number of milliseconds since 1/1/0001 to a string
+-- using the given format.
+--
+-- @param datetime A number of milliseconds since 1/1/0001.
+-- @param datetime A number of milliseconds since 1/1/0001.
+-- @param datetime A number of milliseconds since 1/1/0001.
+-- @param datetime A number of milliseconds since 1/1/0001.
+--
+-- @return A time string, formatted per the parameters.
+--
+function datetimeToString(datetime, format, utc, msec)
+
+
+--------------------------------------------------------------------------------
+-- Sleep for the given number of milliseconds. If the duration is greater than
+-- 10 milliseconds the Lua garbage collector will also be run.
+--
+-- @param duration The amount of time to sleep, in milliseconds.
+--
+-- @return Current memory usage
+--
+function psleep(duration)
+
+--------------------------------------------------------------------------------
+-- Get the host operating system.
+--
+-- @return The string "win32" or "linux".
+--
+function host_os()
+
+--------------------------------------------------------------------------------
+-- Serialize a Lua table into a string that can be later deserialized using
+-- deserializeTable().
+--
+-- @param t The table to serialize.
+-- 
+-- @return A string version of the table.
+--
+function serializeTable(t)
+
+--------------------------------------------------------------------------------
+-- Deserialize a string into a Lua table.
+--
+-- @param str A table in string format.
+--
+-- @return A Lua table, or nil followed by an error message on failure.
+--
+function deserializeTable(str)
+
+--------------------------------------------------------------------------------
+-- Get the current time.  Time is returned as milliseconds since 
+-- Jan 1, 0001, 00:00:00.000.
+--
+-- @return milliseconds since 01/01/0001 00:00:00.000.
+--
+function currentTime()
+
+--------------------------------------------------------------------------------
+-- Performs base 64 encoding on an input string.
+-- 
+-- @param str A string of data to base 64 encode.
+--
+-- @return A base 64 encoded string, or nil followed by an error message.
+--
+function base64_encode(str)
+
+--------------------------------------------------------------------------------
+-- Performs base 64 decoding on an input string.
+-- 
+-- @param str A base 64 encoded string to decode.
+--
+-- @return A decoded string, or nil followed by an error message.
+--
+function base64_decode(str)
+
+--------------------------------------------------------------------------------
+-- AES encrypt a string.
+--
+-- @param input The string to encrypt.
+-- @param base64 A boolean. If true the output will be base64 encoded. Defaults
+--               to true.
+-- @param key A 16 byte string to use as the key. Optional. If not provided an
+--            internally generated key will be used.
+--
+-- @return An encrypted string, or nil followed by an error message.
+--
+function aes_encrypt(input, base64, key)
+
+--------------------------------------------------------------------------------
+-- AES decrypt a string.
+--
+-- @param input The string to be decrypted.
+-- @param base64 A boolean. If true the input will be base64 decoded before
+--               being decrypted. Defaults to true.
+-- @param key A 16 byte string to use as the key. Optional. If not provided an
+--            internally generated key will be used.
+--
+-- @return The decrypted string, or nil followed by an error message.
+--
+function aes_decrypt(input, base64, key)
+
+--------------------------------------------------------------------------------
+-- Calculate the CRC16 for a given string.
+-- 
+-- @param input The string of data to operate on.
+--
+-- @return The CRC16 value, or nil on error.
+--
+function calculateCRC16(input)
+
+--------------------------------------------------------------------------------
+-- Encode a string into a URI. This will escape all non-valid URI characters.
+--
+-- @param input The string to encode.
+--
+-- @return An encoded string.
+--
+function uri_encode(input)
+
+--------------------------------------------------------------------------------
+-- Decode a URI string by unescaping non-valid characters.
+--
+-- @param input The string to decode.
+--
+-- @return A decoded string.
+--
+function uri_decode(encode)
+
+--------------------------------------------------------------------------------
+-- Returns the REST URL path to a given Thing's service.
+--
+-- @param thing The name of Thing
+-- @param service The name of the service
+--
+-- @return The RESTful path to the service
+--
+function EMS_SVC_PATH(thing, service)
+
+--------------------------------------------------------------------------------
+-- Returns the REST URL path to a given Thing's Events.
+--
+-- @param thing The name of Thing
+-- @param event The name of the event
+--
+-- @return The RESTful path to the event
+--
+function EMS_EVENT_PATH(thing, event)
+
+--------------------------------------------------------------------------------
+-- Returns the REST URL path to a given Thing's property.
+--
+-- @param thing The name of Thing
+-- @param property The name of the property
+--
+-- @return The RESTful path to a property
+--
+function EMS_PROP_PATH(thing, prop)
+
+--------------------------------------------------------------------------------
+-- Returns the REST URL path to a given Thing's PropertiesVTQ.
+--
+-- @param thing The name of Thing
+--
+-- @return The RESTful path to the Thing's PropertiesVTQ
+--
+function EMS_PROPS_VTQ_PATH(thing, prop)
+
+--------------------------------------------------------------------------------
+-- Returns the REST URL path to a given Thing's event.
+--
+-- @param thing The name of Thing
+-- @param event The name of the event
+--
+-- @return The RESTful path to an event
+--
+function EMS_EVENT_PATH(thing, event)
+
+--------------------------------------------------------------------------------
+-- Creates a table that can be used as the headers parameter for HTTP calls.
+-- By default, the table will contain the following header values:
+-- <ul>
+--  <li>content-type: application/json</li>
+--  <li>host: localhost</li>
+-- </ul>
+-- A different host and content type can be specified using the first two
+-- parameters to this method. Additional headers can be specified in the
+-- headers parameter.
+--
+-- @param host The value to use as the host header. Defaults to 'localhost'.
+-- @param contentType The value to use as the content-type header. Defaults
+--                    to 'application/json'.
+-- @param headers Any additional headers that should be in the final table.
+--
+-- @return A table of HTTP headers that always includes host and content-type.
+--
+function REQ_HEADERS(host, contentType, headers)
+
+--------------------------------------------------------------------------------
+-- Creates a table that can be used as the headers for HTTP responses.
+-- By default, the table will contain the following header values:
+-- <ul>
+--  <li>content-type: application/json</li>
+-- </ul>
+-- A different content type can be specified using the first
+-- parameter to this method. Additional headers can be specified in the
+-- headers parameter.
+--
+-- @param contentType The value to use as the content-type header. Defaults
+--                    to 'application/json'.
+-- @param headers Any additional headers that should be in the final table.
+--
+-- @return A table of HTTP headers that always includes content-type.
+--
+function RESP_HEADERS(contentType, headers)
+
+--------------------------------------------------------------------------------
+-- Converts a table of key/value pairs to a string of key=value pairs,
+-- separated by a given string.
+--
+-- @param t The table to be joined into a string.
+-- @param sep The string to use as a separator. Defaults to ", ".
+--
+function toString(t, sep)
+
+--------------------------------------------------------------------------------
+-- Convert a value to a Lua boolean.
+--
+-- @param b The value to convert.
+--
+-- @return If b is a boolean, then b will be returned.
+--         If b is a string, the false will be returned if b:lower() is equal
+--         to 'false'. If b is a number, then false will be returned if it is
+--         equal to 0. For other types, false will be returned if b is nil.
+--         Otherwise, true will be returned.
+--
+function toboolean(b)
+
+--------------------------------------------------------------------------------
+-- Creates a 3 element table representing the given property as a VTQ:
+-- <pre>{ value = 100, quality = "GOOD", time = 1234567890112 }</pre>
+--
+-- @param prop The table representing the property, from the Thing's
+--             properties table.
+--
+-- @return A table representing this property as a VTQ.
+--
+function toVTQ(prop)
+
+--------------------------------------------------------------------------------
+-- Creates VTQ table from the property, but represent the value as a Variant:
+-- <pre>{ value = {baseType = "NUMBER", value = 100}, quality = "GOOD", time = 1234567890112 }</pre>
+--
+-- @param prop The table representing the property, from the Thing's
+--             properties table.
+--
+-- @return A table representing this property as a VTQ.
+--
+function toVariantVTQ(prop)
+
+--------------------------------------------------------------------------------
+-- Returns the given property as a VTQ encoded into a JSON string.
+--
+-- @param prop The property to encode.
+--
+-- @return A JSON string representing the property as a VTQ.
+--
+function toJsonVTQ(prop)
+
+--------------------------------------------------------------------------------
+-- Returns the given property as an infotable encoded into a JSON string.
+--
+-- @param prop The property to encode.
+--
+-- @return A JSON string representing the property as a infotable.
+--
+function toJsonInfotable(pt)
+
+--------------------------------------------------------------------------------
+-- Determine if a given string is JSON.
+--
+-- @param str The string to check
+--
+-- @return True if the str is decodable, false otherwise.
+--
+function isJson(str)
+
+--------------------------------------------------------------------------------
+-- Encodes the given table into a valid JSON string. In the case of success,
+-- it returns true, followed by the encoded string. If encoding fails, it
+-- returns false, followed by an error message.
+--
+-- @param data The Lua table to encode.
+--
+-- @return True if successful, followed by the encoded string. False on
+--         failure, followed by an error message.
+--
+function encodeData(data)
+
+--------------------------------------------------------------------------------
+-- Takes a path or URL, removes everything before the '?' character, and then
+-- parses the remaining string into a table of query parameter.
+--
+-- @param path The path to be parsed.
+--
+-- @return The
+function parseQueryParams(path)
+
+--------------------------------------------------------------------------------
+-- Inspects a property and determines if its current value differs from its
+-- previous value according to the following data change rules:
+--
+-- <ol>
+--  <li>If the property's pushType is ALWAYS return true</li>
+--  <li>If the property's pushType is NEVER return false</li>
+--  <li>If the property's pushType is VALUE then return true if the property
+--      is a NUMBER and its change exceeds its configured threshold, or return
+--      true if it is not a NUMBER and its current and previous values are
+--      different.</li>
+-- </ol>
+--
+-- @param pt The full property table of the property to be inspected.
+--
+-- @return True if the property has changed. False otherwise.
+--
+function evaluateChange(pt)
+
+--------------------------------------------------------------------------------
+-- Enclose the given function within a critical section created using the
+-- executing script's global tw_mutex object. If the function fails during
+-- the execution, scopelock will ensure that the mutex is freed. This helps
+-- to prevent a rogue unlocked mutex that would result in deadlock.
+--
+function scopelock(func, ...)
+
+--------------------------------------------------------------------------------
+-- Determine if the host system is a Windows OS.
+--
+-- @return True is the host system is a Windows OS.
+--
+function isWindows()
+
